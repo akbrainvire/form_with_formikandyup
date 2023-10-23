@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import envelope from "./svg/envelope2.svg";
@@ -13,8 +13,10 @@ import {
   NameStyle,
   TANDC,
 } from "./styles/InputStyle";
+import Address from "./Address";
 
 const RegistrationForm: React.FC = () => {
+  const [location, setLocation] = useState({});
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -27,6 +29,7 @@ const RegistrationForm: React.FC = () => {
       website: false,
       other: false,
     },
+    address: {},
   };
   let phoneRegex = /^\d{10}$/;
 
@@ -42,6 +45,12 @@ const RegistrationForm: React.FC = () => {
       .required("This field is Required"),
   });
   // console.log(initialValues);
+
+  const handleAddressData = (value: any) => {
+    setLocation({ ...value });
+    console.log("enter", location);
+  };
+
   return (
     <Formik
       initialValues={initialValues}
@@ -133,7 +142,9 @@ const RegistrationForm: React.FC = () => {
                 <ErrorBox>{formik.errors.email}</ErrorBox>
               ) : null}
             </Container>
-
+            <Container>
+              <Address handleAddressData={handleAddressData} />
+            </Container>
             <Container>
               <Label>6. Where did you hear about us?</Label>
               <div>
