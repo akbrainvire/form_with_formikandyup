@@ -32,9 +32,10 @@ export const Container = styled.div`
   margin-bottom: 20px;
 `;
 
-export const Label = styled.label`
+export const Label = styled.label<{ mb?: string }>`
   color: #313131;
   font-size: 18px;
+  margin-bottom: ${(props) => (props?.mb ? `${props.mb}` : null)};
 `;
 
 export const StyledSelect = styled.select`
