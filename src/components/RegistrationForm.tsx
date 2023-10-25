@@ -30,7 +30,11 @@ interface RegistrationFormValues {
     other: boolean;
     otherValue: string;
   };
-  address: any;
+  address: {
+    country: string;
+    state: string;
+    city: string;
+  };
 }
 
 const RegistrationForm: React.FC = () => {
@@ -48,7 +52,11 @@ const RegistrationForm: React.FC = () => {
       otherValue: "",
       other: false,
     },
-    address: {},
+    address: {
+      country: "",
+      state: "",
+      city: "",
+    },
   };
   let phoneRegex = /^\d{10}$/;
 
@@ -56,25 +64,31 @@ const RegistrationForm: React.FC = () => {
     firstName: Yup.string().required("This field is Required").min(4),
     lastName: Yup.string().required("This field is Required").min(3),
     dob: Yup.date()
-      .required("Required")
+      .required("This field is required")
       .max(new Date(Date.now() - 567648000000), "Must be 18year or greater"),
-    phone: Yup.string().matches(phoneRegex, "Phone number is not valid"),
+    phone: Yup.string()
+      .required("This field is required")
+      .matches(phoneRegex, "Phone number is not valid"),
     email: Yup.string()
       .email("Invalid email address")
       .required("This field is Required"),
+    address: Yup.object().shape({
+      country: Yup.string().required("Please Select Country"),
+      state: Yup.string().required("Please Select State"),
+      city: Yup.string().required("Please Select City"),
+    }),
   });
   // console.log(initialValues);
 
   const handleAddressData = (value: any) => {
     setLocation({ ...value });
-    console.log("enter", location);
+    // console.log("enter", location);
   };
 
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={(values, { resetForm }) => {
-        values.address = location;
         console.log("form submitted", values);
         resetForm();
       }}
@@ -164,7 +178,12 @@ const RegistrationForm: React.FC = () => {
                 ) : null}
               </Container>
               <Container>
-                <Address handleAddressData={handleAddressData} />
+                <Address
+                  handleAddressData={handleAddressData}
+                  handleChange={formik.handleChange}
+                  values={formik.values.address}
+                  formik={formik}
+                />
               </Container>
               <Container>
                 <Label mb="1.2vw">6. Where did you hear about us?</Label>
@@ -231,7 +250,7 @@ const RegistrationForm: React.FC = () => {
               </Container>
 
               <Button
-                disabled={!(formik.dirty && formik.isValid)}
+                // disabled={!(formik.dirty && formik.isValid)}
                 type="submit"
               >
                 Submit

@@ -18,7 +18,7 @@ export const NameStyle = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
-  flex-direction: row;
+  flex-direction: column;
 
   & > input {
     width: 40%;
@@ -43,8 +43,6 @@ export const StyledSelect = styled.select`
   border: 1px solid black;
   margin: 1vw;
   background-color: transparent;
-  width: 100%;
-
   &:focus {
     outline: none;
   }

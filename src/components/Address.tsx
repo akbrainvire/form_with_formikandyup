@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import {
   AddressContainer,
+  ErrorBox,
   Label,
   NameStyle,
   StyledSelect,
@@ -9,9 +10,13 @@ import { Country, State, City } from "country-state-city";
 
 interface IType {
   handleAddressData: (data: any) => void;
+  handleChange: (e: ChangeEvent) => void;
+  values: any;
+  formik: any;
 }
 
 const Address: React.FC<IType> = (props) => {
+  // console.log(props.handleChange, "props");
   const [location, setLocation] = useState({
     country: {
       name: null,
@@ -44,9 +49,9 @@ const Address: React.FC<IType> = (props) => {
     props.handleAddressData(location);
   }, [location]);
 
-  const handleCountryChange = (e: any) => {
-    const option = countries.find((country) => country.name === e.target.value);
-    // console.log(option)
+  const handleCountryChange = (name: any) => {
+    const option = countries.find((country) => country.name === name);
+    console.log(option);
     setLocation((prev) => ({
       ...prev,
       country: option,
@@ -56,8 +61,9 @@ const Address: React.FC<IType> = (props) => {
     setStates(states);
   };
 
-  const handleStateChange = (e: any) => {
-    const option = states.find((state) => state.name === e.target.value);
+  const handleStateChange = (name: any) => {
+    const option = states.find((state) => state.name === name);
+    console.log(location);
     setLocation((prev) => ({
       ...prev,
       state: option,
@@ -66,8 +72,8 @@ const Address: React.FC<IType> = (props) => {
     setCities(city);
   };
 
-  const handleCityChange = (e: any) => {
-    const option = cities.find((city) => city.name === e.target.value);
+  const handleCityChange = (name: any) => {
+    const option = cities.find((city) => city.name === name);
     setLocation((prev) => ({
       ...prev,
       city: option,
@@ -82,14 +88,16 @@ const Address: React.FC<IType> = (props) => {
       <AddressContainer>
         <NameStyle>
           <StyledSelect
-            onChange={(e) => handleCountryChange(e)}
-            defaultValue="Select Country"
-            name="country"
+            onChange={(e) => {
+              // console.log(e.target.value, "e");
+              handleCountryChange(e.target.value);
+              props.handleChange(e);
+            }}
+            value={props.values.country}
+            name="address.country"
             id="country"
           >
-            <option value="Select Country" disabled>
-              Select Country
-            </option>
+            <option value="Select Country">Select Country</option>
             {countries.map((country) => {
               // console.log(country)
               return (
@@ -99,18 +107,25 @@ const Address: React.FC<IType> = (props) => {
               );
             })}
           </StyledSelect>
+
+          {props.formik.touched.address?.country &&
+          props.formik.errors.address?.country ? (
+            <ErrorBox>{props.formik.errors.address.country}</ErrorBox>
+          ) : null}
         </NameStyle>
+
         <NameStyle>
           <StyledSelect
-            onChange={handleStateChange}
+            onChange={(e) => {
+              handleStateChange(e.target.value);
+              props.handleChange(e);
+            }}
             placeholder="Select State"
-            defaultValue="Select State"
-            name="state"
+            value={props.values.state}
+            name="address.state"
             id="state"
           >
-            <option value="Select State" disabled>
-              Select State
-            </option>
+            <option value="Select State">Select State</option>
             {states.map((state) => {
               // console.log(country)
               return (
@@ -120,18 +135,23 @@ const Address: React.FC<IType> = (props) => {
               );
             })}
           </StyledSelect>
+          {props.formik.touched.address?.state &&
+          props.formik.errors.address?.state ? (
+            <ErrorBox>{props.formik.errors.address.state}</ErrorBox>
+          ) : null}
         </NameStyle>
 
         <NameStyle>
           <StyledSelect
-            onChange={handleCityChange}
-            defaultValue="Select City"
-            name="city"
+            onChange={(e) => {
+              handleCityChange(e.target.value);
+              props.handleChange(e);
+            }}
+            value={props.values.city}
+            name="address.city"
             id="city"
           >
-            <option value="Select City" disabled>
-              Select City
-            </option>
+            <option value="Select City">Select City</option>
             {cities.map((city) => {
               // console.log(country)
               return (
@@ -141,6 +161,10 @@ const Address: React.FC<IType> = (props) => {
               );
             })}
           </StyledSelect>
+          {props.formik.touched.address?.city &&
+          props.formik.errors.address?.city ? (
+            <ErrorBox>{props.formik.errors.address.city}</ErrorBox>
+          ) : null}
         </NameStyle>
       </AddressContainer>
     </>
