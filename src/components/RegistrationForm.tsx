@@ -35,7 +35,6 @@ interface RegistrationFormValues {
 
 const RegistrationForm: React.FC = () => {
   const [location, setLocation] = useState({});
-  const [otherData, setOtherData] = useState<string>("");
   const initialValues: RegistrationFormValues = {
     firstName: "",
     lastName: "",
@@ -69,10 +68,6 @@ const RegistrationForm: React.FC = () => {
   const handleAddressData = (value: any) => {
     setLocation({ ...value });
     console.log("enter", location);
-  };
-
-  const handleOtherInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOtherData(e.target.value);
   };
 
   return (
