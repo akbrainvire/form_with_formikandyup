@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Formik, setNestedObjectValues } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import envelope from "./svg/envelope2.svg";
 import telephone from "./svg/telephone.svg";
@@ -28,12 +28,14 @@ interface RegistrationFormValues {
     friend: boolean;
     website: boolean;
     other: boolean;
+    otherValue: string;
   };
   address: any;
 }
 
 const RegistrationForm: React.FC = () => {
   const [location, setLocation] = useState({});
+  const [otherData, setOtherData] = useState<string>("");
   const initialValues: RegistrationFormValues = {
     firstName: "",
     lastName: "",
@@ -44,6 +46,7 @@ const RegistrationForm: React.FC = () => {
     referredBy: {
       friend: false,
       website: false,
+      otherValue: "",
       other: false,
     },
     address: {},
@@ -66,6 +69,10 @@ const RegistrationForm: React.FC = () => {
   const handleAddressData = (value: any) => {
     setLocation({ ...value });
     console.log("enter", location);
+  };
+
+  const handleOtherInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOtherData(e.target.value);
   };
 
   return (
@@ -200,6 +207,17 @@ const RegistrationForm: React.FC = () => {
                   </CheckboxLabel>
                 </div>
               </Container>
+              {formik.values.referredBy.other !== false ? (
+                <Container>
+                  <Input
+                    type="text"
+                    placeholder="Please specify"
+                    value={formik.values.referredBy.otherValue}
+                    name="referredBy.otherValue"
+                    onChange={formik.handleChange}
+                  />
+                </Container>
+              ) : null}
               <Container>
                 <TANDC>
                   <Input
