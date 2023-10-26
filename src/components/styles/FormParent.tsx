@@ -5,7 +5,7 @@ export const FormParent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 5%;
+  margin: 0 25%;
 
   & > h2 {
     font-weight: 500;

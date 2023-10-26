@@ -1,3 +1,4 @@
+import { Field } from "formik";
 import { styled } from "styled-components";
 
 export const Input = styled.input<{ icon?: string }>`
@@ -5,11 +6,22 @@ export const Input = styled.input<{ icon?: string }>`
   padding: 15px;
   outline: none;
   margin: 1vw;
+  box-sizing: border-box;
 
   background: ${(props) => (props?.icon ? `url(${props.icon})` : "none")};
-  background-position: 10px center; /* Position the SVG on the left side */
+  background-position: 10px center;
   background-repeat: no-repeat;
-  background-size: 27px 30px; /* Set the size of the SVG */
+  background-size: 27px 30px;
+
+  padding-left: 45px;
+`;
+
+export const SingleCheckBox = styled(Field)`
+  border: 1px solid black;
+  padding: 15px;
+  outline: none;
+  margin: 1vw;
+  box-sizing: border-box;
 
   padding-left: 45px;
 `;
@@ -22,6 +34,23 @@ export const NameStyle = styled.div`
 
   & > input {
     width: 40%;
+  }
+`;
+
+export const NameContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 20px;
+`;
+export const NameDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  & > input {
+    width: 22vw;
   }
 `;
 
@@ -38,11 +67,16 @@ export const Label = styled.label<{ mb?: string }>`
   margin-bottom: ${(props) => (props?.mb ? `${props.mb}` : null)};
 `;
 
-export const StyledSelect = styled.select`
+export const StyledSelect = styled.select<{ icon?: string }>`
   padding: 13px;
+  padding-left: 45px;
   border: 1px solid black;
   margin: 1vw;
   background-color: transparent;
+  background: ${(props) => (props?.icon ? `url(${props.icon})` : "none")};
+  background-position: 10px center;
+  background-repeat: no-repeat;
+  background-size: 27px 30px;
   &:focus {
     outline: none;
   }

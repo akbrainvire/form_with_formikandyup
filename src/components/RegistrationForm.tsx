@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Formik } from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
 import envelope from "./svg/envelope2.svg";
 import telephone from "./svg/telephone.svg";
@@ -11,11 +11,15 @@ import {
   ErrorBox,
   Input,
   Label,
+  NameContainer,
+  NameDiv,
   NameStyle,
+  SingleCheckBox,
   TANDC,
 } from "./styles/InputStyle";
 import Address from "./Address";
 import { FormParent } from "./styles/FormParent";
+import CheckboxComponent from "./CheckboxComponent";
 
 interface RegistrationFormValues {
   firstName: string;
@@ -60,7 +64,7 @@ const RegistrationForm: React.FC = () => {
   };
   let phoneRegex = /^\d{10}$/;
 
-  const validationSchema = Yup.object({
+  const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("This field is Required").min(4),
     lastName: Yup.string().required("This field is Required").min(3),
     dob: Yup.date()
@@ -77,6 +81,10 @@ const RegistrationForm: React.FC = () => {
       state: Yup.string().required("Please Select State"),
       city: Yup.string().required("Please Select City"),
     }),
+    termsAccepted: Yup.bool().oneOf(
+      [true],
+      "You need to accept the terms and conditions"
+    ),
   });
   // console.log(initialValues);
 
@@ -90,7 +98,7 @@ const RegistrationForm: React.FC = () => {
       initialValues={initialValues}
       onSubmit={(values, { resetForm }) => {
         console.log("form submitted", values);
-        resetForm();
+        // resetForm();
       }}
       validationSchema={validationSchema}
     >
@@ -101,36 +109,41 @@ const RegistrationForm: React.FC = () => {
           <Form onSubmit={formik.handleSubmit}>
             <FormParent>
               <h2 style={{ textAlign: "center" }}>Registration Form</h2>
+
               <NameStyle>
-                <Container>
-                  <Label htmlFor="firstName">1. First Name*:</Label>
-                  <Input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    value={formik.values.firstName}
-                  />
-                  {formik.touched.firstName && formik.errors.firstName ? (
-                    <ErrorBox>{formik.errors.firstName}</ErrorBox>
-                  ) : null}
-                </Container>
-                <Container>
-                  <Label htmlFor="lastName">2. Last Name*:</Label>
-                  <Input
-                    type="text"
-                    id="lastName"
-                    onBlur={formik.handleBlur}
-                    name="lastName"
-                    onChange={formik.handleChange}
-                    value={formik.values.lastName}
-                  />
-                  {formik.touched.lastName && formik.errors.lastName ? (
-                    <ErrorBox>{formik.errors.lastName}</ErrorBox>
-                  ) : null}
-                </Container>
+                <Label htmlFor="firstName">1. Name.</Label>
+                <NameContainer>
+                  <NameDiv>
+                    <Input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      placeholder="First Name"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      value={formik.values.firstName}
+                    />
+                    {formik.touched.firstName && formik.errors.firstName ? (
+                      <ErrorBox>{formik.errors.firstName}</ErrorBox>
+                    ) : null}
+                  </NameDiv>
+                  <NameDiv>
+                    <Input
+                      type="text"
+                      placeholder="Last Name"
+                      id="lastName"
+                      onBlur={formik.handleBlur}
+                      name="lastName"
+                      onChange={formik.handleChange}
+                      value={formik.values.lastName}
+                    />
+                    {formik.touched.lastName && formik.errors.lastName ? (
+                      <ErrorBox>{formik.errors.lastName}</ErrorBox>
+                    ) : null}
+                  </NameDiv>
+                </NameContainer>
               </NameStyle>
+
               <Container>
                 <Label htmlFor="dob">3. Date of Birth*:</Label>
 
@@ -188,64 +201,67 @@ const RegistrationForm: React.FC = () => {
               <Container>
                 <Label mb="1.2vw">6. Where did you hear about us?</Label>
                 <div>
-                  <CheckboxLabel htmlFor="friend">
-                    <Input
-                      id="friend"
-                      onChange={formik.handleChange}
-                      type="checkbox"
-                      name="referredBy.friend"
-                    />
-                    Friend
-                  </CheckboxLabel>
+                  <CheckboxComponent
+                    htmlFor="friend"
+                    id="friend"
+                    onChange={formik.handleChange}
+                    type="checkbox"
+                    name="referredBy.friend"
+                    label="Friend"
+                  />
                 </div>
                 <div>
-                  <CheckboxLabel htmlFor="website">
-                    <Input
-                      id="website"
-                      type="checkbox"
-                      onChange={formik.handleChange}
-                      name="referredBy.website"
-                    />
-                    Website
-                  </CheckboxLabel>
+                  <CheckboxComponent
+                    htmlFor="website"
+                    id="website"
+                    type="checkbox"
+                    onChange={formik.handleChange}
+                    name="referredBy.website"
+                    label="Website"
+                  />
                 </div>
                 <div>
-                  <CheckboxLabel htmlFor="other">
-                    <Input
-                      id="other"
-                      type="checkbox"
-                      onChange={formik.handleChange}
-                      name="referredBy.other"
-                    />
-                    Other
-                  </CheckboxLabel>
+                  <CheckboxComponent
+                    htmlFor="other"
+                    id="other"
+                    type="checkbox"
+                    onChange={formik.handleChange}
+                    name="referredBy.other"
+                    label="Other"
+                  />
                 </div>
               </Container>
               {formik.values.referredBy.other !== false ? (
                 <Container>
-                  <Input
+                  <CheckboxComponent
                     type="text"
                     placeholder="Please specify"
                     value={formik.values.referredBy.otherValue}
                     name="referredBy.otherValue"
                     onChange={formik.handleChange}
+                    label=""
                   />
                 </Container>
               ) : null}
               <Container>
                 <TANDC>
-                  <Input
-                    type="checkbox"
-                    id="termsAccepted"
-                    name="termsAccepted"
-                  />
-                  <Label htmlFor="termsAccepted">
+                  <label>
+                    <SingleCheckBox
+                      type="checkbox"
+                      //id="termsAccepted"
+                      name="termsAccepted"
+                      //checked={formik.values.termsAccepted}
+                      //value={formik.values.termsAccepted}
+                    />
                     I accept the terms and conditions
-                  </Label>
-                  {formik.touched.termsAccepted &&
-                  formik.errors.termsAccepted ? (
+                  </label>
+                  {/* <Label htmlFor="termsAccepted">
+                    I accept the terms and conditions
+                  </Label> */}
+                  {/* <>{console.log(formik.errors)}</> */}
+                  {!formik.values.termsAccepted && (
                     <ErrorBox>{formik.errors.termsAccepted}</ErrorBox>
-                  ) : null}
+                  )}
                 </TANDC>
               </Container>
 
