@@ -42,7 +42,7 @@ const Address: React.FC<IType> = (props) => {
 
   useEffect(() => {
     props.handleAddressData(location);
-  }, [location]);
+  }, [location, props]);
 
   const handleCountryChange = (name: any) => {
     const option = countries.find((country) => country.name === name);

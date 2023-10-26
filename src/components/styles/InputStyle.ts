@@ -5,7 +5,7 @@ export const Input = styled.input<{ icon?: string }>`
   border: 1px solid black;
   padding: 15px;
   outline: none;
-  margin: 1vw;
+  margin: 1vw 0;
   box-sizing: border-box;
 
   background: ${(props) => (props?.icon ? `url(${props.icon})` : "none")};
@@ -17,13 +17,19 @@ export const Input = styled.input<{ icon?: string }>`
 `;
 
 export const SingleCheckBox = styled(Field)`
-  border: 1px solid black;
-  padding: 15px;
+  appearance: none;
+  width: 1.2em;
+  margin-right: 10px;
+  height: 1.2em;
+  border: 1px solid #fff;
+  border-radius: 40%;
   outline: none;
-  margin: 1vw;
-  box-sizing: border-box;
+  cursor: pointer;
 
-  padding-left: 45px;
+  &:checked {
+    background-color: #000;
+    border-color: white;
+  }
 `;
 
 export const NameStyle = styled.div`
@@ -40,18 +46,18 @@ export const NameStyle = styled.div`
 export const NameContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
   width: 100%;
-  justify-content: space-between;
+  gap: 15px;
   margin-bottom: 20px;
 `;
 export const NameDiv = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 
-  & > input {
+  /* & > input {
     width: 22vw;
-  }
+  } */
 `;
 
 export const Container = styled.div`
@@ -71,7 +77,7 @@ export const StyledSelect = styled.select<{ icon?: string }>`
   padding: 13px;
   padding-left: 45px;
   border: 1px solid black;
-  margin: 1vw;
+  margin: 1vw 0;
   background-color: transparent;
   background: ${(props) => (props?.icon ? `url(${props.icon})` : "none")};
   background-position: 10px center;
@@ -93,17 +99,32 @@ export const AddressContainer = styled.div`
   }
 `;
 
-export const CheckboxLabel = styled.label`
-  display: block;
-  border: 1px solid black;
-  padding: 15px;
+export const CheckboxLabel = styled.label<{ border?: string }>`
+  display: flex;
+  border: ${(props) => (props.border ? props.border : `1px solid black`)};
+  padding: 15px 0;
+  flex-direction: row;
   outline: none;
-  margin: 0.2vw 1vw;
+  margin: 0.5vw 0;
+  align-items: center;
 `;
 
 export const CheckboxInput = styled.input`
-  margin-right: 8px;
+  appearance: none;
+  width: 1.2em;
+  margin-right: 10px;
+  height: 1.2em;
+  border: 1px solid #000;
+  border-radius: 40%;
+  outline: none;
+  cursor: pointer;
+
+  &:checked {
+    background-color: #000;
+    border-color: white;
+  }
 `;
+
 export const TandCondition = styled.div`
   margin-top: 1.5vw;
 `;
@@ -114,7 +135,7 @@ export const Button = styled.button`
   color: ${(props) => (props.disabled ? "black" : "white")};
   background-color: ${(props) => (props.disabled ? "grey" : "black")};
   outline: none;
-  margin: 1vw;
+  margin: 1vw 0;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   border: 1px solid black;
 `;

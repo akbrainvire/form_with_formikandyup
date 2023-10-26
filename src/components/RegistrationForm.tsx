@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ErrorMessage, Form, Formik } from "formik";
+import React from "react";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import envelope from "./svg/envelope2.svg";
 import telephone from "./svg/telephone.svg";
@@ -20,6 +20,7 @@ import {
 import Address from "./Address";
 import { FormParent } from "./styles/FormParent";
 import CheckboxComponent from "./CheckboxComponent";
+import RadioButtonComponent from "./RadioButtonComponent";
 
 interface RegistrationFormValues {
   firstName: string;
@@ -28,12 +29,9 @@ interface RegistrationFormValues {
   email: string;
   phone: string;
   termsAccepted: boolean;
-  referredBy: {
-    friend: boolean;
-    website: boolean;
-    other: boolean;
-    otherValue: string;
-  };
+  toggle: string;
+  otherValue: string;
+  selectedRadioOption: string;
   address: {
     country: string;
     state: string;
@@ -42,7 +40,7 @@ interface RegistrationFormValues {
 }
 
 const RegistrationForm: React.FC = () => {
-  const [location, setLocation] = useState({});
+  // const [location, setLocation] = useState({});
   const initialValues: RegistrationFormValues = {
     firstName: "",
     lastName: "",
@@ -50,12 +48,9 @@ const RegistrationForm: React.FC = () => {
     email: "",
     phone: "",
     termsAccepted: false,
-    referredBy: {
-      friend: false,
-      website: false,
-      otherValue: "",
-      other: false,
-    },
+    toggle: "",
+    otherValue: "",
+    selectedRadioOption: "",
     address: {
       country: "",
       state: "",
@@ -85,11 +80,15 @@ const RegistrationForm: React.FC = () => {
       [true],
       "You need to accept the terms and conditions"
     ),
+    toggle: Yup.array()
+      .min(1, "This field is Required")
+      .required("This field is Required"),
+    selectedRadioOption: Yup.string().required("This field is required"),
   });
   // console.log(initialValues);
 
   const handleAddressData = (value: any) => {
-    setLocation({ ...value });
+    // setLocation({ ...value });
     // console.log("enter", location);
   };
 
@@ -145,7 +144,7 @@ const RegistrationForm: React.FC = () => {
               </NameStyle>
 
               <Container>
-                <Label htmlFor="dob">3. Date of Birth*:</Label>
+                <Label htmlFor="dob">2. Date of Birth*:</Label>
 
                 <Input
                   type="date"
@@ -176,7 +175,7 @@ const RegistrationForm: React.FC = () => {
                 ) : null}
               </Container>
               <Container>
-                <Label htmlFor="email">5. Email*:</Label>
+                <Label htmlFor="email">3. Email*:</Label>
                 <Input
                   icon={envelope}
                   type="email"
@@ -199,14 +198,18 @@ const RegistrationForm: React.FC = () => {
                 />
               </Container>
               <Container>
-                <Label mb="1.2vw">6. Where did you hear about us?</Label>
+                <Label mb="1.2vw">5. Where did you hear about us?</Label>
+                {formik.touched.toggle && formik.errors.toggle ? (
+                  <ErrorBox>{formik.errors.toggle}</ErrorBox>
+                ) : null}
                 <div>
                   <CheckboxComponent
                     htmlFor="friend"
                     id="friend"
-                    onChange={formik.handleChange}
+                    values={formik.values}
+                    handleChange={formik.handleChange}
                     type="checkbox"
-                    name="referredBy.friend"
+                    name="toggle"
                     label="Friend"
                   />
                 </div>
@@ -215,8 +218,9 @@ const RegistrationForm: React.FC = () => {
                     htmlFor="website"
                     id="website"
                     type="checkbox"
-                    onChange={formik.handleChange}
-                    name="referredBy.website"
+                    handleChange={formik.handleChange}
+                    values={formik.values}
+                    name="toggle"
                     label="Website"
                   />
                 </div>
@@ -225,27 +229,72 @@ const RegistrationForm: React.FC = () => {
                     htmlFor="other"
                     id="other"
                     type="checkbox"
-                    onChange={formik.handleChange}
-                    name="referredBy.other"
+                    handleChange={formik.handleChange}
+                    values={formik.values}
+                    name="toggle"
                     label="Other"
                   />
                 </div>
               </Container>
-              {formik.values.referredBy.other !== false ? (
+              {formik.values.toggle[0] === "Other" ? (
                 <Container>
                   <CheckboxComponent
                     type="text"
                     placeholder="Please specify"
-                    value={formik.values.referredBy.otherValue}
-                    name="referredBy.otherValue"
-                    onChange={formik.handleChange}
+                    value={formik.values.otherValue}
+                    name="otherValue"
+                    handleChange={formik.handleChange}
                     label=""
                   />
                 </Container>
-              ) : null}
+              ) : (
+                (formik.values.otherValue = "")
+              )}
+
+              <Container>
+                <Label mb="1.2vw">6. Where did you see about us?</Label>
+                {formik.touched.selectedRadioOption &&
+                formik.errors.selectedRadioOption ? (
+                  <ErrorBox>{formik.errors.selectedRadioOption}</ErrorBox>
+                ) : null}
+                <div>
+                  <RadioButtonComponent
+                    htmlFor="socialmedia"
+                    id="socialmedia"
+                    values={formik.values}
+                    handleChange={formik.handleChange}
+                    type="radio"
+                    name="selectedRadioOption"
+                    label="Social Media"
+                  />
+                </div>
+                <div>
+                  <RadioButtonComponent
+                    htmlFor="Television"
+                    id="Television"
+                    type="radio"
+                    handleChange={formik.handleChange}
+                    values={formik.values}
+                    name="selectedRadioOption"
+                    label="Television"
+                  />
+                </div>
+                <div>
+                  <RadioButtonComponent
+                    htmlFor="Poster"
+                    id="Poster"
+                    type="checkbox"
+                    handleChange={formik.handleChange}
+                    values={formik.values}
+                    name="selectedRadioOption"
+                    label="Poster"
+                  />
+                </div>
+              </Container>
+
               <Container>
                 <TANDC>
-                  <label>
+                  <CheckboxLabel border="none">
                     <SingleCheckBox
                       type="checkbox"
                       //id="termsAccepted"
@@ -254,7 +303,7 @@ const RegistrationForm: React.FC = () => {
                       //value={formik.values.termsAccepted}
                     />
                     I accept the terms and conditions
-                  </label>
+                  </CheckboxLabel>
                   {/* <Label htmlFor="termsAccepted">
                     I accept the terms and conditions
                   </Label> */}
